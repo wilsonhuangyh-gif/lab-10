@@ -17,7 +17,26 @@ def eval_rpn(tokens):
     #   or one of the operators "+", "-", "*", "/". Evaluate it and return the integer
     #   result. Division should truncate toward zero (int(a / b)).
     #   Example: ["2","1","+","3","*"]  ->  9
-    pass
+    stack = []
+    total = 0
+    for t in tokens: 
+        if t == '+':
+            b,a = stack.pop(), stack.pop()
+            stack.append(a + b)
+        elif t == '-':
+            b,a = stack.pop(), stack.pop()
+            stack.append(a - b)
+        elif t == '*':
+            b,a = stack.pop(), stack.pop()
+            stack.append(a * b)
+        elif t == '/':
+            b,a = stack.pop(), stack.pop()
+            stack.append(int(a / b))
+        else: 
+            stack.append(int(t))
+    return stack[0]
+
+    
 
 
 def decode_string(s):
@@ -26,7 +45,23 @@ def decode_string(s):
     # TODO: decode a string written with the rule k[encoded], meaning `encoded` repeated
     #   k times. The brackets can be nested.
     #   Example: "3[a2[c]]"  ->  "accaccacc"
-    pass
+    stack = []
+    text = ""
+    num = 0
+    for c in s:
+        if c.isdigit():
+            num = num * 10 + int(c)
+        elif c =='[':
+            stack.append((text,num))
+            text = ""
+            num = 0
+        elif c ==']':
+            prev, k = stack.pop()
+            text = prev + text * k 
+        else:
+            text += c
+    return text
+    
 
 
 def daily_temperatures(temps):
@@ -35,7 +70,15 @@ def daily_temperatures(temps):
     # TODO: for each day, return how many days you'd wait for a WARMER temperature.
     #   Put 0 if no warmer day ever comes.
     #   Example: [73,74,75,71,69,72,76,73]  ->  [1,1,4,2,1,1,0,0]
-    pass
+    result = [0] * len(temps)
+    stack = []
+    for i in range(len(temps)):
+        while stack and temps[i] > temps[stack[-1]]:
+            j = stack.pop()
+            result[j] = i - j
+        stack.append(i)
+    return result
+    
 
 
 def num_islands(grid):   # Part 4 - stretch (optional)
