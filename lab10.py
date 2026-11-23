@@ -18,7 +18,6 @@ def eval_rpn(tokens):
     #   result. Division should truncate toward zero (int(a / b)).
     #   Example: ["2","1","+","3","*"]  ->  9
     stack = []
-    total = 0
     for t in tokens: 
         if t == '+':
             b,a = stack.pop(), stack.pop()
